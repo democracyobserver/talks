@@ -1,0 +1,254 @@
+---
+title: "Introduction to the Tidyverse"
+subtitle: "Exploring an Opinionated Grammar of R"
+author: "Nicholas R. Davis"
+institute: "UW-Milwaukee"
+date: "7/29/2019"
+output:
+  ioslides_presentation: 
+   logo: "https://raw.githubusercontent.com/tidyverse/tidyverse/master/pkgdown/favicon/apple-touch-icon-120x120.png"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment="", prompt=TRUE, fig.height=5, fig.width=5)
+```
+
+<!-- A few notes about this document: 
+
+  You can alter the YAML header items as you see fit. 
+  
+  If you want to typeset as PDF slides, select that with the knit menu or change the output to
+  'beamer_presentation; you may want to include a theme and color from the choices listed here:
+  http://deic.uab.es/~iblanes/beamer_gallery/
+  
+  For example, you could do this in the YAML header:
+  
+    theme: "Boadilla"
+    colortheme: "dove"
+
+  Also, more information on working with Rmd can be found here: 
+  https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf
+
+ -->
+
+## What is the 'Tidyverse'?
+
+A set of packages developed together following a common set of principles.
+
+>- "tidy" data philosophy, where each variable has its own column, each observation has its own row
+>- code clarity and reproducibility through common functional structure 
+>- use of pipe `%>%` to improve code development and readability
+
+<!-- The '>' before the bullets here indicates that I want these to appear on click. -->
+
+## Packages Included
+
+- [ ] `ggplot2`: data visualization
+- [x] `dplyr`: data manipulation
+- [ ] `tidyr`: modeling and data management
+- [ ] `readr`: open and organize the data
+- [ ] `purrr`: code optimization and functional programming
+- [x] `tibble`: alternative to data.frame class
+- [ ] `stringr`: functions for working with string data
+- [ ] `forcats`: functions for working with factors
+- [x] also, by default includes `magrittr` (source of the pipe operator)
+
+<!-- I show you a way to create checkboxes here; this has been handy in presentations where 
+I wrote about multiple literatures or methods but can only talk about a few.  -->
+
+## A Few Words of Caution
+
+The Tidyverse can provide a useful set of tools, but...
+
+>- it is *not* a perfect solution to all our data problems
+>- it is *not* always as stable as base-R
+>- it is *not* used by (or even liked by) everyone
+>- perhaps most importantly, it is *not* a replacement for base-R 
+
+Therefore, do *not* assume...
+
+>- that it is always your best choice for building R-scripts
+>- that everyone will inevitably end up being "tidy"
+>- that you can avoid learning base-R for general research tasks
+
+
+## Why Be Tidy-literate?
+
+The Tidyverse provides a powerful set of tools for working with data. 
+
+>- built as a suite of "data science" tools with a focus on importing, manipulating, visualizing data
+>- fairly easy to mix tidy and non-tidy code/functions
+>- code clarity (and "piping") useful as user-generated functions or data management tasks become more complex
+
+# Setting Up <br /> (Entering the Tidyverse)
+
+## Install the Tidyverse
+
+You can install everything at once (recommended)
+
+<!-- note that I include code here which does not get processed in the R interpreter! -->
+```r 
+> install.packages("tidyverse")
+```
+This package is actually many packages wrapped up together for ease of use. 
+<!-- By the way, you can make your own package of packages using this:
+      https://github.com/mkearney/pkgverse  -->
+
+## Access the Tidyverse
+
+Load the Tidyverse
+
+<!-- this is a code chunk which gets processed by the R interpreter -->
+```{r load}
+library(tidyverse)
+```
+
+
+<!-- Note that you can also just load which packages you need for a task instead. -->
+
+## Function Masking and dplyr
+
+What about those conflicts?
+
+>- we see that there are two functions in the `dplyr` package which *mask* base-R functions of the same name
+>- this means if we want to access the base functions instead of the tidy ones, we need to specify the namespace
+>- we could do this with `base::select()`
+>- as a general rule, you might want to load the tidyverse *after* all other packages; this will identify the conflicts for you
+
+# magrittr <br /> (Piping hot code)
+
+## The Pipe Operator
+
+The `%>%` operator (from `magrittr`) has a special purpose.
+
+- takes the object/function call result on the left and "passes" it to the right; it does *not* make assignment by itself 
+- functions on the right can be passed the left side by adding "." in place of the argument
+
+```{r pipe1}
+x <- rnorm(100)
+mean(x)
+x %>% mean(.)
+```
+
+## Pipe Example
+
+```{r pipe2}
+# assign Prestige data to object
+prestige.data <- carData::Prestige
+# use pipe to return brief overview after removing NA values
+prestige.data %>% na.omit(.) %>% car::brief(.)
+```
+
+# tibble <br /> (Tidy data frames)
+
+## What is a Tibble?
+
+The tidyverse uses tibbles as an alternative to the `data.frame` class. 
+
+>- tibbles, data frames have many similar properties (rectangular data)
+>- tibbles are intended to represent the "tidy" data principles by design
+>- tibbles respond well to `dplyr` data manipulation methods but coerce easily back to `data.frame` as well
+
+## Load Data as Tibble
+
+
+```{r tibble}
+(prestige.data <- prestige.data %>% as_tibble)
+```
+
+## Properties of Tibbles
+
+The Good:
+
+>- automatic "brief" view; just type object name in console
+>- can be subsetted using all the familiar operators/indexing methods
+
+The Bad:
+
+>- it is possible to create column classes which are tidy-specific (via `haven`)
+>- sometimes older functions cannot directly use tibbles
+>- no row names allowed!
+
+## Coercing Tibbles
+
+It is easy to use tibbles with base-R functions which take arguments of class `data.frame`
+
+- this is because tibbles have multiple class attributes
+
+```{r class1}
+prestige.data %>% class(.)
+```
+
+- where needed, explicit coercing is simple
+
+```{r class2}
+prestige.data %>% as.data.frame %>% class
+```
+
+## Example
+
+```{r lmex}
+prestige.data %>% 
+  lm(prestige ~ income + education + women, data=.)
+```
+
+# dplyr <br /> (Tidy data management)
+
+## Basic dplyr Functionality
+
+There are many useful functions for working with data in this package.
+
+>- summarize and group cases  
+>- manipulate cases and variables  
+>- combining and manipulating data sets
+
+## Summarize
+
+Suppose we wanted to find the means of a few variables:
+
+```{r summarize}
+prestige.data %>% 
+  filter(!is.na(type)) %>%
+  summarise_at(vars(education, income, women, prestige), mean)
+```
+
+## Summarize by Group
+
+What about means for each level of the factor 'type'?
+
+```{r bygroup}
+prestige.data %>% 
+  filter(!is.na(type)) %>%
+  group_by(type) %>%
+  summarise_at(vars(education, income, women, prestige), mean)
+```
+
+## Manipulate Variables
+
+Perhaps we want to create a new variable which is a transformation of `education`:
+
+```{r manipulate}
+prestige.data %>% 
+  mutate(., educ_deviation = 
+           (education - mean(education) ) / sd(education) ) %>%
+  select_at(., vars(education, educ_deviation) ) %>% 
+  summary
+```
+
+## Additional Resources
+
+On the web: 
+
+- <https://www.tidyverse.org/>
+
+Books:
+
+- Wickham. H. and G. Grolemund. "R for Data Science." Online: <https://r4ds.had.co.nz/>
+
+Also see:  
+
+- Data management: <https://tinyurl.com/data-transform-sheet>  
+- Data import: <https://tinyurl.com/data-import-sheet> 
+
+
+
