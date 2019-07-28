@@ -17,4 +17,4 @@ This repository contains:
 
 ---
 
-[![Slide thumbnail](img/slides-thumb.png)](tidy_lecture-slides.pdf)
+<img src="img/slides-thumb.png" alt="Slide thumbnail" width="720"/>
