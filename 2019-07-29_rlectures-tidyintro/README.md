@@ -10,8 +10,11 @@ This one hour lecture was given at as part of John Fox's [R Lecture series](http
 
 This repository contains:
 
-* HTML document containing the presentation slides
+* PDF document containing the presentation slides
 * R Markdown file (with comments) to build the slides
+* HTML document which renders the IO presentation slides
 * R script file (with comments) used during the lecture
 
 ---
+
+[![Slide thumbnail](img/slides-thumb.png)](tidy_lecture-slides.pdf)
