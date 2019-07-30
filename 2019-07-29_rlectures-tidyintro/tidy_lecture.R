@@ -103,6 +103,17 @@ prestige.data %>%
   filter(!is.na(type)) %>%
   summarise_at(vars(education, income, women, prestige), mean)
 
+
+# ADDED: there was a question about whether one could add other
+#   functions here; I said that you need to be careful in *how*
+#   you do so. Here is an example which works:
+prestige.data %>% 
+  filter(!is.na(type)) %>%
+  summarise_at(
+    vars(education, income, women, prestige), 
+    funs(n_distinct, mean, sd, min, max))
+
+
 # we can also get the mean values for those variables, but 
 #   calculated for each non-NA level of 'type'
 prestige.data %>% 
