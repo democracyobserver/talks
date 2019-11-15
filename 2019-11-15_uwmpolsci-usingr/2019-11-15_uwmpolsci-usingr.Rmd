@@ -127,4 +127,3 @@ Since R is open-source and user contributed, there is no "help desk" as with Sta
 * a little light reading: textbooks, online books, guides
 * anarchy in motion: [r stack on stack overflow](https://stackoverflow.com/questions/tagged/r)
 * when in doubt, tweet: search for `#rstats`
-
