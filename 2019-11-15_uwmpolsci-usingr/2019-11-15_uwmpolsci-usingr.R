@@ -103,4 +103,3 @@ search.var.labels <- function(dat, str){
   rownames(vldf) <- names(dat)[ind]
   vldf
 }
-
