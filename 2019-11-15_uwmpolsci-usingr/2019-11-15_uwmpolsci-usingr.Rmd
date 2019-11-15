@@ -16,7 +16,7 @@ header-includes:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 
-# A few notes about this document: 
+# A few notes about this document:
 #  You can alter the YAML header items (above the "---") as you see fit. 
   
 #  If you want to change the theme and color, pick from the choices listed here:
